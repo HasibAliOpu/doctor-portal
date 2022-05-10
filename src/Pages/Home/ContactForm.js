@@ -26,7 +26,7 @@ const ContactForm = () => {
         <textarea
           type="text"
           placeholder="Your message"
-          className="input input-bordered input-info w-full max-w-xl mb-2"
+          className="input input-bordered input-info w-full max-w-xl mb-2 h-36"
         />
       </form>
       <GradientButton>Submit</GradientButton>

@@ -39,7 +39,7 @@ const PatientReviews = () => {
           <h1 className="text-4xl">What Our Patients Says</h1>
         </div>
         <div className="">
-          <img className="w-52" src={quote} alt="" />
+          <img className="w-24 lg:w-48" src={quote} alt="" />
         </div>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
