@@ -10,20 +10,20 @@ const Info = () => {
       <InfoCard
         img={clock}
         bg={"bg-gradient-to-r from-secondary to-primary"}
-        header={"Opening Hours"}
-        detail={`Mon-Fri: 9:00.AM - 10:00.PM And Sat-Sun: 12:00.PM - 6:00.PM`}
+        cardTitle={"Opening Hours"}
+        description={`Mon-Fri: 9:00.AM - 10:00.PM And Sat-Sun: 12:00.PM - 6:00.PM`}
       />
       <InfoCard
         img={marker}
         bg={"bg-accent"}
-        header={"Visit our location"}
-        detail={"Brooklyn, NY 10036, United States"}
+        cardTitle={"Visit our location"}
+        description={"Brooklyn, NY 10036, United States"}
       />
       <InfoCard
         img={phone}
         bg={"bg-gradient-to-r from-secondary to-primary"}
-        header={"Contact us now"}
-        detail={"+000 123 456789"}
+        cardTitle={"Contact us now"}
+        description={"+000 123 456789"}
       />
     </div>
   );
