@@ -4,6 +4,7 @@ import fluoride from "../../assets/images/fluoride.png";
 import cavity from "../../assets/images/cavity.png";
 import whitening from "../../assets/images/whitening.png";
 import treatment from "../../assets/images/treatment.png";
+import GradientButton from "../Shared/GradientButton";
 const Services = () => {
   const serviceInfo = [
     {
@@ -41,29 +42,27 @@ const Services = () => {
           <Service key={service.id} service={service}></Service>
         ))}
       </div>
-      <div class="hero min-h-screen ">
-        <div class="hero-content flex-col lg:flex-row gap-16">
+      <div className="hero min-h-screen my-32">
+        <div className="hero-content flex-col lg:flex-row gap-16">
           <img
             src={treatment}
             width={"458px"}
             height={"576px"}
-            class=" rounded-lg shadow-2xl"
+            className=" rounded-lg shadow-2xl"
             alt=""
           />
           <div className="px-5">
-            <h1 class="text-5xl font-bold">
+            <h1 className="text-5xl font-bold">
               Exceptional Dental Care, on Your Terms
             </h1>
-            <p class="py-6">
+            <p className="py-6">
               Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda
               excepturi exercitationem quasi. In deleniti eaque aut repudiandae
               et a id nisi. Provident cupiditate voluptatem et in. Quaerat
               fugiat ut assumenda excepturi exercitationem quasi. In deleniti
               eaque aut repudiandae et a id nisi.
             </p>
-            <button class="btn bg-gradient-to-r from-secondary to-primary text-white border-none">
-              Get Started
-            </button>
+            <GradientButton>Get Started</GradientButton>
           </div>
         </div>
       </div>

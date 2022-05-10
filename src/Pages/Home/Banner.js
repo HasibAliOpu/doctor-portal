@@ -1,6 +1,7 @@
 import React from "react";
 import chair from "../../assets/images/chair.png";
 import bg from "../../assets/images/bg.png";
+import GradientButton from "../Shared/GradientButton";
 const Banner = () => {
   return (
     <div
@@ -22,9 +23,7 @@ const Banner = () => {
             excepturi exercitationem quasi. In deleniti eaque aut repudiandae et
             a id nisi.
           </p>
-          <button className="btn bg-gradient-to-r from-primary to-secondary hover:from-secondary hover:to-primary border-none uppercase text-white  tracking-wide">
-            Get Started
-          </button>
+          <GradientButton>Get Started</GradientButton>
         </div>
       </div>
     </div>
