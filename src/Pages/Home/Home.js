@@ -4,6 +4,7 @@ import Banner from "./Banner";
 import Info from "./Info";
 import Services from "./Services";
 import PatientReviews from "./PatientReviews";
+import ContactForm from "./ContactForm";
 
 const Home = () => {
   return (
@@ -13,6 +14,7 @@ const Home = () => {
       <Services />
       <MakeAppointment />
       <PatientReviews />
+      <ContactForm />
     </div>
   );
 };
