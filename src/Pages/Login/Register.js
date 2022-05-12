@@ -1,81 +1,156 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+
+import {
+  useCreateUserWithEmailAndPassword,
+  useSignInWithGoogle,
+  useUpdateProfile,
+} from "react-firebase-hooks/auth";
+import auth from "../../firebase.init";
+import Loading from "../../Loading";
+
+import { toast } from "react-toastify";
 
 const Register = () => {
+  const navigate = useNavigate();
+  const [updateProfile, updating, updateError] = useUpdateProfile(auth);
+  const [signInWithGoogle, googleUser, googleLoading, googleError] =
+    useSignInWithGoogle(auth);
+  const [createUserWithEmailAndPassword, user, loading, error] =
+    useCreateUserWithEmailAndPassword(auth);
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm();
+  const onSubmit = async (data) => {
+    await createUserWithEmailAndPassword(data.email, data.password);
+    await updateProfile({ displayName: data.name });
+    navigate("/appointment");
+  };
+  if (googleLoading || loading || updating) {
+    return <Loading />;
+  }
+  if (error || googleError || updateError) {
+    toast(googleError?.message || error?.message);
+  }
+
   return (
-    <div className="mt-12">
-      <div className="w-full max-w-sm p-6 m-auto bg-cyan-300 rounded-md shadow-xl ">
-        <h1 className="text-3xl font-semibold text-center text-slate-700 ">
-          Register Now!!
-        </h1>
+    <div className="flex h-screen justify-center items-center">
+      <div className="card w-96 bg-base-100 shadow-xl">
+        <div className="card-body">
+          <h2 className="text-center text-2xl font-bold">Register</h2>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <div className="form-control w-full max-w-xs">
+              <label className="label">
+                <span className="label-text">Name</span>
+              </label>
+              <input
+                type="text"
+                placeholder="your Name"
+                className="input input-bordered w-full max-w-xs"
+                {...register("name", {
+                  required: {
+                    value: true,
+                    message: "Name is Required",
+                  },
+                })}
+              />
+              <label className="label">
+                {errors.name?.type === "required" && (
+                  <span className="label-text-alt text-red-500">
+                    {errors.email.message}
+                  </span>
+                )}
+              </label>
+            </div>
+            <div className="form-control w-full max-w-xs">
+              <label className="label">
+                <span className="label-text">Email</span>
+              </label>
+              <input
+                type="email"
+                placeholder="your Email"
+                className="input input-bordered w-full max-w-xs"
+                {...register("email", {
+                  required: {
+                    value: true,
+                    message: "Email is Required",
+                  },
+                  pattern: {
+                    value: /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/,
+                    message: "Provide a valid Email",
+                  },
+                })}
+              />
+              <label className="label">
+                {errors.email?.type === "required" && (
+                  <span className="label-text-alt text-red-500">
+                    {errors.email.message}
+                  </span>
+                )}
+                {errors.email?.type === "pattern" && (
+                  <span className="label-text-alt text-red-500">
+                    {errors.email.message}
+                  </span>
+                )}
+              </label>
+            </div>
+            <div className="form-control w-full max-w-xs">
+              <label className="label">
+                <span className="label-text">Password</span>
+              </label>
+              <input
+                type="password"
+                placeholder="Password"
+                className="input input-bordered w-full max-w-xs"
+                {...register("password", {
+                  required: {
+                    value: true,
+                    message: "Password is Required",
+                  },
+                  minLength: {
+                    value: 6,
+                    message: "Must be 6 characters or longer",
+                  },
+                })}
+              />
+              <label className="label">
+                {errors.password?.type === "required" && (
+                  <span className="label-text-alt text-red-500">
+                    {errors.password.message}
+                  </span>
+                )}
+                {errors.password?.type === "minLength" && (
+                  <span className="label-text-alt text-red-500">
+                    {errors.password.message}
+                  </span>
+                )}
+              </label>
+            </div>
 
-        <form className="mt-6">
-          <div>
             <input
-              type="text"
-              placeholder="Username"
-              className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border rounded-md  focus:border-blue-400  focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+              className="btn w-full max-w-xs text-white"
+              type="submit"
+              value="Register"
             />
-          </div>
-          <div className="mt-4">
-            <input
-              type="email"
-              name="email"
-              placeholder="Email"
-              className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border rounded-md  focus:border-blue-400  focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
-            />
-          </div>
+          </form>
+          <p className="font-bold text-sm text-center">
+            Already have an Account?{" "}
+            <Link className="text-secondary" to="/login">
+              go Login
+            </Link>
+          </p>
+          <div className="divider">OR</div>
 
-          <div className="mt-4">
-            <input
-              type="password"
-              placeholder="Password"
-              className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border rounded-md  focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
-            />
-          </div>
-
-          <div className="mt-6">
-            <button className="w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-gray-700 rounded-md hover:bg-gray-600 focus:outline-none focus:bg-gray-600">
-              Register
-            </button>
-          </div>
-        </form>
-
-        <div className="flex items-center justify-between mt-4">
-          <span className="w-1/5 border-b border-gray-700 lg:w-1/5"></span>
-
-          <Link
-            to="/"
-            className="text-xs text-center text-gray-700 hover:underline"
-          >
-            or Register with Social Media
-          </Link>
-
-          <span className="w-1/5 border-b border-gray-700 lg:w-1/5"></span>
-        </div>
-
-        <div className="flex items-center mt-6 -mx-2">
           <button
-            type="button"
-            className="flex items-center justify-center w-full px-6 py-2 mx-2 text-sm font-medium text-white transition-colors duration-200 transform bg-blue-500 rounded-md hover:bg-blue-400 focus:bg-blue-400 focus:outline-none"
+            onClick={() => signInWithGoogle()}
+            className="btn btn-outline"
           >
-            <svg className="w-4 h-4 mx-2 fill-current" viewBox="0 0 24 24">
-              <path d="M12.24 10.285V14.4h6.806c-.275 1.765-2.056 5.174-6.806 5.174-4.095 0-7.439-3.389-7.439-7.574s3.345-7.574 7.439-7.574c2.33 0 3.891.989 4.785 1.849l3.254-3.138C18.189 1.186 15.479 0 12.24 0c-6.635 0-12 5.365-12 12s5.365 12 12 12c6.926 0 11.52-4.869 11.52-11.726 0-.788-.085-1.39-.189-1.989H12.24z"></path>
-            </svg>
-
-            <span className="hidden mx-2 sm:inline">Sign Up with Google</span>
+            Continue With Google
           </button>
         </div>
-
-        <p className="mt-8 text-xs  text-center text-gray-700">
-          Already have an account?{" "}
-          <Link
-            to="/login"
-            className="font-medium text-gray-700  hover:underline"
-          >
-            go login
-          </Link>
-        </p>
       </div>
     </div>
   );

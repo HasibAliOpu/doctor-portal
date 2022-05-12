@@ -1,18 +1,26 @@
-import React from "react";
+import React, { useRef } from "react";
 import { useForm } from "react-hook-form";
+
 import {
+  useSendPasswordResetEmail,
   useSignInWithEmailAndPassword,
   useSignInWithGoogle,
 } from "react-firebase-hooks/auth";
 import auth from "../../firebase.init";
 import Loading from "../../Loading";
-import { Link } from "react-router-dom";
+
+import { toast } from "react-toastify";
+import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const emailRef = useRef();
+  const navigate = useNavigate();
   const [signInWithGoogle, googleUser, googleLoading, googleError] =
     useSignInWithGoogle(auth);
   const [signInWithEmailAndPassword, EPUser, EPLoading, EPError] =
     useSignInWithEmailAndPassword(auth);
+  const [sendPasswordResetEmail, sending, error] =
+    useSendPasswordResetEmail(auth);
   const {
     register,
     formState: { errors },
@@ -20,12 +28,18 @@ const Login = () => {
   } = useForm();
   const onSubmit = (data) => {
     signInWithEmailAndPassword(data.email, data.password);
+    navigate("/appointment");
+  };
+  const handleResetPassword = (e) => {
+    const email = emailRef.current.value;
+    const email2 = e.target.email.value;
+    console.log(email, email2);
   };
   if (googleLoading || EPLoading) {
     return <Loading />;
   }
-  if (googleError || EPError) {
-    console.log(googleError || EPError);
+  if (EPError || googleError) {
+    toast(googleError?.message || EPError?.message);
   }
   return (
     <div className="flex h-screen justify-center items-center">
@@ -39,6 +53,8 @@ const Login = () => {
               </label>
               <input
                 type="email"
+                ref={emailRef}
+                name="email"
                 placeholder="your Email"
                 className="input input-bordered w-full max-w-xs"
                 {...register("email", {
@@ -97,13 +113,26 @@ const Login = () => {
                 )}
               </label>
             </div>
-
+            <span className="flex justify-center">
+              <button
+                onClick={handleResetPassword}
+                className="btn btn-link text-xs"
+              >
+                Forget Password
+              </button>
+            </span>
             <input
-              className="btn w-full max-w-xs"
+              className="btn w-full max-w-xs text-white"
               type="submit"
               value="Login"
             />
           </form>
+          <p className="font-bold text-sm text-center">
+            New to doctors portal?{" "}
+            <Link className="text-secondary" to="/register">
+              Create New Account
+            </Link>
+          </p>
           <div className="divider">OR</div>
 
           <button
