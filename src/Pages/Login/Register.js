@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 
@@ -13,9 +13,9 @@ import Loading from "../../Loading";
 import { toast } from "react-toastify";
 
 const Register = () => {
+  const navigate = useNavigate();
   const location = useLocation();
   let from = location.state?.from?.pathname || "/";
-  const navigate = useNavigate();
   const [updateProfile, updating, updateError] = useUpdateProfile(auth);
   const [signInWithGoogle, googleUser, googleLoading, googleError] =
     useSignInWithGoogle(auth);
@@ -30,14 +30,16 @@ const Register = () => {
     await createUserWithEmailAndPassword(data.email, data.password);
     await updateProfile({ displayName: data.name });
   };
+  useEffect(() => {
+    if (user || googleUser) {
+      navigate(from, { replace: true });
+    }
+  }, [user, googleUser, from, navigate]);
   if (googleLoading || loading || updating) {
     return <Loading />;
   }
   if (error || googleError || updateError) {
     toast(googleError?.message || error?.message);
-  }
-  if (user || googleUser) {
-    navigate(from, { replace: true });
   }
 
   return (

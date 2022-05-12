@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 import {
@@ -28,16 +28,18 @@ const Login = () => {
   const onSubmit = (data) => {
     signInWithEmailAndPassword(data.email, data.password);
   };
-
+  useEffect(() => {
+    if (user || googleUser) {
+      navigate(from, { replace: true });
+    }
+  }, [user, googleUser, from, navigate]);
   if (googleLoading || loading) {
     return <Loading />;
   }
   if (error || googleError) {
     toast(googleError?.message || error?.message);
   }
-  if (user || googleUser) {
-    navigate(from, { replace: true });
-  }
+
   return (
     <div className="flex z-10 h-screen justify-center items-center">
       <div className="card w-96 bg-base-100 shadow-xl">
