@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 
 import {
@@ -13,6 +13,8 @@ import Loading from "../../Loading";
 import { toast } from "react-toastify";
 
 const Register = () => {
+  const location = useLocation();
+  let from = location.state?.from?.pathname || "/";
   const navigate = useNavigate();
   const [updateProfile, updating, updateError] = useUpdateProfile(auth);
   const [signInWithGoogle, googleUser, googleLoading, googleError] =
@@ -27,13 +29,15 @@ const Register = () => {
   const onSubmit = async (data) => {
     await createUserWithEmailAndPassword(data.email, data.password);
     await updateProfile({ displayName: data.name });
-    navigate("/appointment");
   };
   if (googleLoading || loading || updating) {
     return <Loading />;
   }
   if (error || googleError || updateError) {
     toast(googleError?.message || error?.message);
+  }
+  if (user || googleUser) {
+    navigate(from, { replace: true });
   }
 
   return (
