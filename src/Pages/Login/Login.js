@@ -10,17 +10,17 @@ import auth from "../../firebase.init";
 import Loading from "../../Loading";
 
 import { toast } from "react-toastify";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const Login = () => {
   const emailRef = useRef();
   const navigate = useNavigate();
+  const location = useLocation();
+  let from = location.state?.from?.pathname || "/";
   const [signInWithGoogle, googleUser, googleLoading, googleError] =
     useSignInWithGoogle(auth);
-  const [signInWithEmailAndPassword, EPUser, EPLoading, EPError] =
+  const [signInWithEmailAndPassword, user, loading, error] =
     useSignInWithEmailAndPassword(auth);
-  const [sendPasswordResetEmail, sending, error] =
-    useSendPasswordResetEmail(auth);
   const {
     register,
     formState: { errors },
@@ -28,18 +28,20 @@ const Login = () => {
   } = useForm();
   const onSubmit = (data) => {
     signInWithEmailAndPassword(data.email, data.password);
-    navigate("/appointment");
   };
   const handleResetPassword = (e) => {
     const email = emailRef.current.value;
     const email2 = e.target.email.value;
     console.log(email, email2);
   };
-  if (googleLoading || EPLoading) {
+  if (googleLoading || loading) {
     return <Loading />;
   }
-  if (EPError || googleError) {
-    toast(googleError?.message || EPError?.message);
+  if (error || googleError) {
+    toast(googleError?.message || error?.message);
+  }
+  if (user || googleUser) {
+    navigate(from, { replace: true });
   }
   return (
     <div className="flex h-screen justify-center items-center">
