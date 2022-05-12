@@ -1,8 +1,7 @@
-import React, { useRef } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 
 import {
-  useSendPasswordResetEmail,
   useSignInWithEmailAndPassword,
   useSignInWithGoogle,
 } from "react-firebase-hooks/auth";
@@ -11,9 +10,9 @@ import Loading from "../../Loading";
 
 import { toast } from "react-toastify";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import ResetModal from "./ResetModal";
 
 const Login = () => {
-  const emailRef = useRef();
   const navigate = useNavigate();
   const location = useLocation();
   let from = location.state?.from?.pathname || "/";
@@ -29,11 +28,7 @@ const Login = () => {
   const onSubmit = (data) => {
     signInWithEmailAndPassword(data.email, data.password);
   };
-  const handleResetPassword = (e) => {
-    const email = emailRef.current.value;
-    const email2 = e.target.email.value;
-    console.log(email, email2);
-  };
+
   if (googleLoading || loading) {
     return <Loading />;
   }
@@ -44,7 +39,7 @@ const Login = () => {
     navigate(from, { replace: true });
   }
   return (
-    <div className="flex h-screen justify-center items-center">
+    <div className="flex z-10 h-screen justify-center items-center">
       <div className="card w-96 bg-base-100 shadow-xl">
         <div className="card-body">
           <h2 className="text-center text-2xl font-bold">Login</h2>
@@ -55,8 +50,6 @@ const Login = () => {
               </label>
               <input
                 type="email"
-                ref={emailRef}
-                name="email"
                 placeholder="your Email"
                 className="input input-bordered w-full max-w-xs"
                 {...register("email", {
@@ -115,23 +108,21 @@ const Login = () => {
                 )}
               </label>
             </div>
-            <span className="flex justify-center">
-              <button
-                onClick={handleResetPassword}
-                className="btn btn-link text-xs"
-              >
-                Forget Password
-              </button>
-            </span>
+
             <input
               className="btn w-full max-w-xs text-white"
               type="submit"
               value="Login"
             />
           </form>
+          <span className="flex justify-center">
+            <label htmlFor="reset-modal" className="btn btn-link text-xs">
+              Forget Password
+            </label>
+          </span>
           <p className="font-bold text-sm text-center">
             New to doctors portal?{" "}
-            <Link className="text-secondary" to="/register">
+            <Link className="text-primary" to="/register">
               Create New Account
             </Link>
           </p>
@@ -143,6 +134,7 @@ const Login = () => {
           >
             Continue With Google
           </button>
+          <ResetModal></ResetModal>
         </div>
       </div>
     </div>
