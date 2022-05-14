@@ -24,8 +24,13 @@ const BookingModal = ({ date, treatment, setTreatment }) => {
     };
 
     const { data } = await axios.post("http://localhost:5000/booking", booking);
-    toast.success(data.message);
-
+    if (data.success) {
+      toast.success(`Appointment is set, ${formattedDate} at ${slot}`);
+    } else {
+      toast.error(
+        `Already have an Appointment on ${data.exists?.date} at ${data.exists?.slot}`
+      );
+    }
     // to close the modal
     setTreatment(null);
   };
