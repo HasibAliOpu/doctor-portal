@@ -11,6 +11,7 @@ import auth from "../../firebase.init";
 import Loading from "../../Loading";
 
 import { toast } from "react-toastify";
+import { sendEmailVerification } from "firebase/auth";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -20,7 +21,7 @@ const Register = () => {
   const [signInWithGoogle, googleUser, googleLoading, googleError] =
     useSignInWithGoogle(auth);
   const [createUserWithEmailAndPassword, user, loading, error] =
-    useCreateUserWithEmailAndPassword(auth);
+    useCreateUserWithEmailAndPassword(auth, { sendEmailVerification: true });
   const {
     register,
     formState: { errors },
@@ -43,7 +44,7 @@ const Register = () => {
   }
 
   return (
-    <div className="flex h-screen justify-center items-center">
+    <div className="flex h-screen justify-center items-center mt-6">
       <div className="card w-96 bg-base-100 shadow-xl">
         <div className="card-body">
           <h2 className="text-center text-2xl font-bold">Register</h2>
@@ -144,7 +145,7 @@ const Register = () => {
           </form>
           <p className="font-bold text-sm text-center">
             Already have an Account?{" "}
-            <Link className="text-secondary" to="/login">
+            <Link className="text-primary hover:underline" to="/login">
               go Login
             </Link>
           </p>

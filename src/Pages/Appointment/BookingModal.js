@@ -1,14 +1,33 @@
+import axios from "axios";
 import { format } from "date-fns";
 import React from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import auth from "../../firebase.init";
-
-const BookingModal = ({ date, treatment }) => {
+import { toast } from "react-toastify";
+const BookingModal = ({ date, treatment, setTreatment }) => {
   const [user] = useAuthState(auth);
-  const { name, slots } = treatment;
-  const handleBooking = (event) => {
+  const { _id, name, slots } = treatment;
+  const formattedDate = format(date, "PP");
+
+  const handleBooking = async (event) => {
     event.preventDefault();
     const slot = event.target.slot.value;
+
+    const booking = {
+      treatmentId: _id,
+      treatment: name,
+      date: formattedDate,
+      slot,
+      patient: user.email,
+      patientName: user.displayName,
+      phone: event.target.phone.value,
+    };
+
+    const { data } = await axios.post("http://localhost:5000/booking", booking);
+    toast.success(data.message);
+
+    // to close the modal
+    setTreatment(null);
   };
   return (
     <div>
@@ -59,6 +78,7 @@ const BookingModal = ({ date, treatment }) => {
             <input
               type="text"
               name="phone"
+              required
               placeholder="Phone Number"
               className="input input-bordered input-secondary w-full max-w-xs"
             />

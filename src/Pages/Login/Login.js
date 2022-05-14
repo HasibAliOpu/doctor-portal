@@ -41,7 +41,7 @@ const Login = () => {
   }
 
   return (
-    <div className="flex z-10 h-screen justify-center items-center">
+    <div className="flex z-10 h-screen justify-center items-center mt-6">
       <div className="card w-96 bg-base-100 shadow-xl">
         <div className="card-body">
           <h2 className="text-center text-2xl font-bold">Login</h2>
@@ -118,13 +118,16 @@ const Login = () => {
             />
           </form>
           <span className="flex justify-center">
-            <label htmlFor="reset-modal" className="btn btn-link text-xs">
+            <label
+              htmlFor="reset-modal"
+              className="btn btn-link hover:underline text-xs"
+            >
               Forget Password
             </label>
           </span>
           <p className="font-bold text-sm text-center">
             New to doctors portal?{" "}
-            <Link className="text-primary" to="/register">
+            <Link className="text-primary hover:underline" to="/register">
               Create New Account
             </Link>
           </p>
