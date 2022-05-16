@@ -24,7 +24,7 @@ const MyAppointment = () => {
         <table className="table table-zebra w-100">
           <thead>
             <tr>
-              <th></th>
+              <th>No.</th>
               <th>Name</th>
               <th>Treatment</th>
               <th>Time</th>

@@ -12,6 +12,7 @@ import Loading from "../../Loading";
 
 import { toast } from "react-toastify";
 import { sendEmailVerification } from "firebase/auth";
+import useToken from "../../Hooks/useToken";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -31,11 +32,13 @@ const Register = () => {
     await createUserWithEmailAndPassword(data.email, data.password);
     await updateProfile({ displayName: data.name });
   };
-  useEffect(() => {
-    if (user || googleUser) {
-      navigate(from, { replace: true });
-    }
-  }, [user, googleUser, from, navigate]);
+  const [token] = useToken(googleUser || user);
+  // useEffect(() => {
+  //   if (user || googleUser) {
+  //     // navigate(from, { replace: true });
+  //   }
+  // }, [user, googleUser, from, navigate]);
+
   if (googleLoading || loading || updating) {
     return <Loading />;
   }
