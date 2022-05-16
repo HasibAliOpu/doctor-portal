@@ -2,7 +2,6 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import auth from "../../firebase.init";
-import Loading from "../../Loading";
 
 const MyAppointment = () => {
   const [user] = useAuthState(auth);
@@ -11,7 +10,12 @@ const MyAppointment = () => {
     if (user) {
       (async () => {
         const { data } = await axios.get(
-          `http://localhost:5000/booking?patient=${user?.email}`
+          `http://localhost:5000/booking?patient=${user?.email}`,
+          {
+            headers: {
+              authorization: localStorage.getItem("accessToken"),
+            },
+          }
         );
         setAppointments(data);
       })();

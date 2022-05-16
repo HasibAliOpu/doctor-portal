@@ -11,6 +11,7 @@ import Loading from "../../Loading";
 import { toast } from "react-toastify";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import ResetModal from "./ResetModal";
+import useToken from "../../Hooks/useToken";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -28,11 +29,13 @@ const Login = () => {
   const onSubmit = (data) => {
     signInWithEmailAndPassword(data.email, data.password);
   };
+  const [token] = useToken(googleUser || user);
+
   useEffect(() => {
-    if (user || googleUser) {
+    if (token) {
       navigate(from, { replace: true });
     }
-  }, [user, googleUser, from, navigate]);
+  }, [token, from, navigate]);
   if (googleLoading || loading) {
     return <Loading />;
   }
