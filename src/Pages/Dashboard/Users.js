@@ -1,11 +1,22 @@
 import React from "react";
 import { useQuery } from "react-query";
 import Loading from "../../Loading";
+import UserRow from "./UserRow";
 
 const Users = () => {
-  const { data: users, isLoading } = useQuery("users", () =>
-    fetch("http://localhost:5000/users").then((res) => res.json())
+  const {
+    data: users,
+    isLoading,
+    refetch,
+  } = useQuery("users", () =>
+    fetch("http://localhost:5000/users", {
+      method: "GET",
+      headers: {
+        authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+      },
+    }).then((res) => res.json())
   );
+
   if (isLoading) {
     return <Loading />;
   }
@@ -17,17 +28,19 @@ const Users = () => {
           <thead>
             <tr>
               <th>no.</th>
-              <th>User Email</th>
-              <th>User Id</th>
+              <th>Email</th>
+              <th></th>
+              <th></th>
             </tr>
           </thead>
-          <tbody className="">
+          <tbody>
             {users.map((user, index) => (
-              <tr key={index}>
-                <th>{index + 1}</th>
-                <td>{user.email}</td>
-                <td>{user._id}</td>
-              </tr>
+              <UserRow
+                key={user._id}
+                refetch={refetch}
+                index={index}
+                user={user}
+              ></UserRow>
             ))}
           </tbody>
         </table>
