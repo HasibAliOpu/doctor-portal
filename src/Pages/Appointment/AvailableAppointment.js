@@ -14,9 +14,9 @@ const AvailableAppointment = ({ date }) => {
     isLoading,
     refetch,
   } = useQuery("available", () =>
-    fetch(`http://localhost:5000/available?date=${formattedDate}`).then((res) =>
-      res.json()
-    )
+    fetch(
+      `https://fathomless-temple-21605.herokuapp.com/available?date=${formattedDate}`
+    ).then((res) => res.json())
   );
   if (isLoading) {
     return <Loading></Loading>;
