@@ -8,7 +8,7 @@ const MyAppointment = () => {
   const navigate = useNavigate();
   const [user] = useAuthState(auth);
   const [appointments, setAppointments] = useState([]);
-  const url = `https://fathomless-temple-21605.herokuapp.com/booking?patient=${user?.email}`;
+  const url = `http://localhost:5000/booking?patient=${user?.email}`;
   useEffect(() => {
     if (user) {
       fetch(url, {

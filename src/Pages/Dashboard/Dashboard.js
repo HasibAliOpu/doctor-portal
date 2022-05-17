@@ -35,14 +35,24 @@ const Dashboard = () => {
             </Link>
           </li>
           {admin && (
-            <li>
-              <Link
-                className="hover:bg-sky-500 hover:text-white"
-                to="/dashboard/users"
-              >
-                All Users
-              </Link>
-            </li>
+            <>
+              <li>
+                <Link
+                  className="hover:bg-sky-500 hover:text-white"
+                  to="/dashboard/users"
+                >
+                  All Users
+                </Link>
+              </li>
+              <li>
+                <Link
+                  className="hover:bg-sky-500 hover:text-white"
+                  to="/dashboard/addDoctor"
+                >
+                  Add a Doctor
+                </Link>
+              </li>
+            </>
           )}
         </ul>
       </div>

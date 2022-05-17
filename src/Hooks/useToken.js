@@ -9,7 +9,7 @@ const useToken = (user) => {
     if (email) {
       (async () => {
         const { data } = await axios.put(
-          `https://fathomless-temple-21605.herokuapp.com/user/${email}`,
+          `http://localhost:5000/user/${email}`,
           currentUser
         );
         const accessToken = data.token;
