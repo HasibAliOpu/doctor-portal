@@ -28,6 +28,9 @@ const Login = () => {
   } = useForm();
   const onSubmit = (data) => {
     signInWithEmailAndPassword(data.email, data.password);
+    if (error || googleError) {
+      toast(error?.message);
+    }
   };
   const [token] = useToken(googleUser || user);
 
@@ -38,9 +41,6 @@ const Login = () => {
   }, [token, from, navigate]);
   if (googleLoading || loading) {
     return <Loading />;
-  }
-  if (error || googleError) {
-    toast(googleError?.message || error?.message);
   }
 
   return (

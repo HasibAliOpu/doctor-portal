@@ -1,26 +1,34 @@
-import axios from "axios";
+import { signOut } from "firebase/auth";
 import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { useNavigate } from "react-router-dom";
 import auth from "../../firebase.init";
 
 const MyAppointment = () => {
+  const navigate = useNavigate();
   const [user] = useAuthState(auth);
   const [appointments, setAppointments] = useState([]);
+  const url = `http://localhost:5000/booking?patient=${user?.email}`;
   useEffect(() => {
     if (user) {
-      (async () => {
-        const { data } = await axios.get(
-          `http://localhost:5000/booking?patient=${user?.email}`,
-          {
-            headers: {
-              authorization: localStorage.getItem("accessToken"),
-            },
+      fetch(url, {
+        headers: {
+          authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      })
+        .then((res) => {
+          if (res.status === 401 || res.status === 403) {
+            signOut(auth);
+            localStorage.removeItem("accessToken");
+            navigate("/");
           }
-        );
-        setAppointments(data);
-      })();
+          return res.json();
+        })
+        .then((data) => {
+          setAppointments(data);
+        });
     }
-  }, [user]);
+  }, [url, user]);
 
   return (
     <div>
