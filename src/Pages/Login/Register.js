@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 
@@ -12,6 +12,8 @@ import Loading from "../../Loading";
 
 import { toast } from "react-toastify";
 import useToken from "../../Hooks/useToken";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -32,6 +34,9 @@ const Register = () => {
     await updateProfile({ displayName: data.name });
   };
   const [token] = useToken(googleUser || user);
+
+  const [open, isOpen] = useState(false);
+
   useEffect(() => {
     if (token) {
       navigate(from, { replace: true });
@@ -106,12 +111,12 @@ const Register = () => {
                 )}
               </label>
             </div>
-            <div className="form-control w-full max-w-xs">
+            <div className="form-control w-full max-w-xs relative">
               <label className="label">
                 <span className="label-text">Password</span>
               </label>
               <input
-                type="password"
+                type={open ? "text" : "password"}
                 placeholder="Password"
                 className="input input-bordered w-full max-w-xs"
                 {...register("password", {
@@ -125,6 +130,16 @@ const Register = () => {
                   },
                 })}
               />
+              <span
+                onClick={() => isOpen(!open)}
+                className="absolute top-12 right-3"
+              >
+                {open ? (
+                  <FontAwesomeIcon icon={faEye} />
+                ) : (
+                  <FontAwesomeIcon icon={faEyeSlash} />
+                )}
+              </span>
               <label className="label">
                 {errors.password?.type === "required" && (
                   <span className="label-text-alt text-red-500">

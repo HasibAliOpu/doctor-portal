@@ -28,7 +28,7 @@ const MyAppointment = () => {
           setAppointments(data);
         });
     }
-  }, [url, user]);
+  }, [url, user, navigate]);
 
   return (
     <div>

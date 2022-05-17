@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import {
@@ -12,6 +12,8 @@ import { toast } from "react-toastify";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import ResetModal from "./ResetModal";
 import useToken from "../../Hooks/useToken";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -34,11 +36,14 @@ const Login = () => {
   };
   const [token] = useToken(googleUser || user);
 
+  const [open, isOpen] = useState(false);
+
   useEffect(() => {
     if (token) {
       navigate(from, { replace: true });
     }
   }, [token, from, navigate]);
+
   if (googleLoading || loading) {
     return <Loading />;
   }
@@ -81,12 +86,12 @@ const Login = () => {
                 )}
               </label>
             </div>
-            <div className="form-control w-full max-w-xs">
-              <label className="label">
+            <div className="form-control w-full max-w-xs relative">
+              <label className="label ">
                 <span className="label-text">Password</span>
               </label>
               <input
-                type="password"
+                type={open ? "text" : "password"}
                 placeholder="Password"
                 className="input input-bordered w-full max-w-xs"
                 {...register("password", {
@@ -100,6 +105,16 @@ const Login = () => {
                   },
                 })}
               />
+              <span
+                onClick={() => isOpen(!open)}
+                className="absolute top-12 right-3"
+              >
+                {open ? (
+                  <FontAwesomeIcon icon={faEye} />
+                ) : (
+                  <FontAwesomeIcon icon={faEyeSlash} />
+                )}
+              </span>
               <label className="label">
                 {errors.password?.type === "required" && (
                   <span className="label-text-alt text-red-500">
