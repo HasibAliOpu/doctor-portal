@@ -8,7 +8,8 @@ import Login from "./Pages/Login/Login";
 import Register from "./Pages/Login/Register";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
-import RequireAuth from "./RequireAuth";
+import RequireAuth from "./RequireAuth/RequireAuth";
+import RequireAdmin from "./RequireAuth/RequireAdmin";
 import Dashboard from "./Pages/Dashboard/Dashboard";
 import MyAppointment from "./Pages/Dashboard/MyAppointment";
 import MyReview from "./Pages/Dashboard/MyReview";
@@ -38,7 +39,14 @@ function App() {
         >
           <Route index element={<MyAppointment />}></Route>
           <Route path="review" element={<MyReview />}></Route>
-          <Route path="users" element={<Users />}></Route>
+          <Route
+            path="users"
+            element={
+              <RequireAdmin>
+                <Users />
+              </RequireAdmin>
+            }
+          ></Route>
         </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
