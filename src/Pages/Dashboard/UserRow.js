@@ -1,9 +1,16 @@
 import React from "react";
 import { toast } from "react-toastify";
+import useToastify from "../../Toast/Toast";
 
 const UserRow = ({ user, index, refetch }) => {
   const { email, role } = user;
-
+  const [Toast] = useToastify();
+  // const handleModal = () => {
+  //   Toast.fire({
+  //     icon: "success",
+  //     title: "Signed in successfully",
+  //   });
+  // };
   const makeAdmin = () => {
     fetch(`http://localhost:5000/user/admin/${email}`, {
       method: "PUT",
@@ -20,7 +27,10 @@ const UserRow = ({ user, index, refetch }) => {
       .then((data) => {
         if (data.modifiedCount > 0) {
           refetch();
-          toast.success("Successfully made an Admin");
+          Toast.fire({
+            icon: "success",
+            title: "Successfully made an Admin",
+          });
         }
       });
   };

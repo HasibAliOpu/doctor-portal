@@ -52,6 +52,14 @@ const Dashboard = () => {
                   Add a Doctor
                 </Link>
               </li>
+              <li>
+                <Link
+                  className="hover:bg-sky-500 hover:text-white"
+                  to="/dashboard/manageDoctor"
+                >
+                  Manage Doctor
+                </Link>
+              </li>
             </>
           )}
         </ul>

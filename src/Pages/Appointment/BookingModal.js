@@ -4,10 +4,14 @@ import React from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import auth from "../../firebase.init";
 import { toast } from "react-toastify";
+import useToastify from "../../Toast/Toast";
+
 const BookingModal = ({ date, treatment, setTreatment, refetch }) => {
   const [user] = useAuthState(auth);
   const { _id, name, slots } = treatment;
   const formattedDate = format(date, "PP");
+
+  const [Toast] = useToastify();
 
   const handleBooking = async (event) => {
     event.preventDefault();
@@ -25,11 +29,15 @@ const BookingModal = ({ date, treatment, setTreatment, refetch }) => {
 
     const { data } = await axios.post("http://localhost:5000/booking", booking);
     if (data.success) {
-      toast.success(`Appointment is set, ${formattedDate} at ${slot}`);
+      Toast.fire({
+        icon: "success",
+        title: `Appointment is set, ${formattedDate} at ${slot}`,
+      });
     } else {
-      toast.error(
-        `Already have an Appointment on ${data.exists?.date} at ${data.exists?.slot}`
-      );
+      Toast.fire({
+        icon: "warning",
+        title: `Already have an Appointment on ${data.exists?.date} at ${data.exists?.slot}`,
+      });
     }
     refetch();
     setTreatment(null);

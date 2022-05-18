@@ -1,12 +1,13 @@
-import { async } from "@firebase/util";
 import axios from "axios";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useQuery } from "react-query";
-import { toast } from "react-toastify";
+
 import Loading from "../../Loading";
+import useToastify from "../../Toast/Toast";
 
 const AddDoctor = () => {
+  const [Toast] = useToastify();
   const {
     register,
     formState: { errors },
@@ -62,10 +63,16 @@ const AddDoctor = () => {
               }
             );
             if (data.acknowledged) {
-              toast.success("Successfully Added Doctor");
+              Toast.fire({
+                icon: "success",
+                title: "Successfully Added Doctor",
+              });
               reset();
             } else {
-              toast.error("Something was Wrong");
+              Toast.fire({
+                icon: "error",
+                title: "Something was Wrong",
+              });
             }
           })();
         }
