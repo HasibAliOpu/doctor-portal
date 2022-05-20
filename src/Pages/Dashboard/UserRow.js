@@ -1,5 +1,5 @@
 import React from "react";
-import { toast } from "react-toastify";
+
 import useToastify from "../../Toast/Toast";
 
 const UserRow = ({ user, index, refetch }) => {
@@ -20,7 +20,10 @@ const UserRow = ({ user, index, refetch }) => {
     })
       .then((res) => {
         if (res.status === 403) {
-          toast.error("Failed To make an Admin");
+          Toast.fire({
+            icon: "error",
+            title: "Failed To make an Admin",
+          });
         }
         return res.json();
       })

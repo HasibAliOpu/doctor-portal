@@ -25,6 +25,9 @@ const ConfirmToast = (url, refetch) => {
         // fetch for delete the doc info
         fetch(url, {
           method: "DELETE",
+          headers: {
+            authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+          },
         });
         swalWithBootstrapButtons.fire(
           "Deleted!",

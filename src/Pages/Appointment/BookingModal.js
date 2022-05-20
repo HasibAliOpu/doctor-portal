@@ -3,12 +3,12 @@ import { format } from "date-fns";
 import React from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import auth from "../../firebase.init";
-import { toast } from "react-toastify";
+
 import useToastify from "../../Toast/Toast";
 
 const BookingModal = ({ date, treatment, setTreatment, refetch }) => {
   const [user] = useAuthState(auth);
-  const { _id, name, slots } = treatment;
+  const { _id, name, slots, price } = treatment;
   const formattedDate = format(date, "PP");
 
   const [Toast] = useToastify();
@@ -22,6 +22,7 @@ const BookingModal = ({ date, treatment, setTreatment, refetch }) => {
       treatment: name,
       date: formattedDate,
       slot,
+      price,
       patient: user.email,
       patientName: user.displayName,
       phone: event.target.phone.value,
