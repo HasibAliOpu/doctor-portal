@@ -1,5 +1,5 @@
 import axios from "axios";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useQuery } from "react-query";
 
@@ -8,6 +8,7 @@ import useToastify from "../../Toast/Toast";
 
 const AddDoctor = () => {
   const [Toast] = useToastify();
+  const [processing, setProcessing] = useState(false);
   const {
     register,
     formState: { errors },
@@ -50,6 +51,7 @@ const AddDoctor = () => {
             img: img,
           };
           /* ** send to database  ** */
+          setProcessing(true);
           (async () => {
             const { data } = await axios.post(
               "http://localhost:5000/doctor",
@@ -62,6 +64,7 @@ const AddDoctor = () => {
                 },
               }
             );
+            setProcessing(false);
             if (data.acknowledged) {
               Toast.fire({
                 icon: "success",
@@ -79,7 +82,7 @@ const AddDoctor = () => {
       });
   };
 
-  if (isLoading) {
+  if (isLoading || processing) {
     return <Loading />;
   }
   return (
