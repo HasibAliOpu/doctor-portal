@@ -28,7 +28,10 @@ const BookingModal = ({ date, treatment, setTreatment, refetch }) => {
       phone: event.target.phone.value,
     };
 
-    const { data } = await axios.post("http://localhost:5000/booking", booking);
+    const { data } = await axios.post(
+      "https://fathomless-temple-21605.herokuapp.com/booking",
+      booking
+    );
     if (data.success) {
       Toast.fire({
         icon: "success",

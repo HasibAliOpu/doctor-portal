@@ -11,7 +11,7 @@ const ManageDoctor = () => {
     isLoading,
     refetch,
   } = useQuery("doctors", () =>
-    fetch("http://localhost:5000/doctor", {
+    fetch("https://fathomless-temple-21605.herokuapp.com/doctor", {
       headers: {
         authorization: `Bearer ${localStorage.getItem("accessToken")}`,
       },
@@ -21,7 +21,7 @@ const ManageDoctor = () => {
     return <Loading />;
   }
   const handleDelete = (email) => {
-    const url = `http://localhost:5000/doctor/${email}`;
+    const url = `https://fathomless-temple-21605.herokuapp.com/doctor/${email}`;
     ConfirmToast(url, refetch);
   };
 

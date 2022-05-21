@@ -8,7 +8,7 @@ const MyAppointment = () => {
   const navigate = useNavigate();
   const [user] = useAuthState(auth);
   const [appointments, setAppointments] = useState([]);
-  const url = `http://localhost:5000/booking?patient=${user?.email}`;
+  const url = `https://fathomless-temple-21605.herokuapp.com/booking?patient=${user?.email}`;
   useEffect(() => {
     if (user) {
       fetch(url, {
@@ -61,7 +61,9 @@ const MyAppointment = () => {
                     </Link>
                   )}
                   {a.price && a.paid && (
-                    <span className="text-green-500">Paid</span>
+                    <span className="btn btn-xs bg-green-500 border-none text-white">
+                      Paid
+                    </span>
                   )}
                 </td>
               </tr>

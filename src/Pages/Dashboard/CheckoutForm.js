@@ -1,28 +1,31 @@
 import React, { useEffect, useState } from "react";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import useToastify from "../../Toast/Toast";
+import Loading from "../../Loading";
 
 const CheckoutForm = ({ appointment }) => {
   const stripe = useStripe();
   const elements = useElements();
 
-  const [success, setSuccess] = useState("");
   const [processing, setProcessing] = useState(false);
-  const [transactionId, setTransactionId] = useState("");
+
   const [clientSecret, setClientSecret] = useState("");
   const [Toast] = useToastify();
 
-  const { price, patient, patientName } = appointment;
+  const { _id, price, patient, patientName } = appointment;
 
   useEffect(() => {
-    fetch("http://localhost:5000/create-payment-intent", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-        authorization: `Bearer ${localStorage.getItem("accessToken")}`,
-      },
-      body: JSON.stringify({ price }),
-    })
+    fetch(
+      "https://fathomless-temple-21605.herokuapp.com/create-payment-intent",
+      {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+        body: JSON.stringify({ price }),
+      }
+    )
       .then((res) => res.json())
       .then((data) => {
         if (data?.clientSecret) {
@@ -55,7 +58,7 @@ const CheckoutForm = ({ appointment }) => {
         title: error.message,
       });
     }
-
+    setProcessing(true);
     // // confirm card payment
     const { paymentIntent, error: intentError } =
       await stripe.confirmCardPayment(clientSecret, {
@@ -68,18 +71,38 @@ const CheckoutForm = ({ appointment }) => {
         },
       });
     if (intentError) {
+      setProcessing(false);
       Toast.fire({
         icon: "error",
         title: intentError.message,
       });
     } else {
-      console.log(paymentIntent);
       Toast.fire({
         icon: "success",
         title: "congrats! Your payment is completed",
       });
+      // store payment on database
+      const payment = {
+        appointment: _id,
+        transactionId: paymentIntent.id,
+      };
+      fetch(`https://fathomless-temple-21605.herokuapp.com/booking/${_id}`, {
+        method: "PATCH",
+        headers: {
+          "content-type": "application/json",
+          authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+        body: JSON.stringify({ payment }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setProcessing(false);
+        });
     }
   };
+  if (processing) {
+    return <Loading />;
+  }
   return (
     <>
       <form onSubmit={handleSubmit}>
@@ -102,21 +125,11 @@ const CheckoutForm = ({ appointment }) => {
         <button
           className="btn btn-success btn-sm mt-4"
           type="submit"
-          disabled={!stripe || !clientSecret || success}
+          disabled={!stripe || !clientSecret}
         >
           Pay
         </button>
       </form>
-
-      {success && (
-        <div className="text-green-500">
-          <p>{success} </p>
-          <p>
-            Your transaction Id:{" "}
-            <span className="text-orange-500 font-bold">{transactionId}</span>{" "}
-          </p>
-        </div>
-      )}
     </>
   );
 };

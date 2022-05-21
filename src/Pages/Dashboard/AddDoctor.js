@@ -16,7 +16,9 @@ const AddDoctor = () => {
     reset,
   } = useForm();
   const { data: services, isLoading } = useQuery("services", () =>
-    fetch("http://localhost:5000/service").then((res) => res.json())
+    fetch("https://fathomless-temple-21605.herokuapp.com/service").then((res) =>
+      res.json()
+    )
   );
 
   const imageStorageKey = "e1a7ceffc9c7ffb3c42389531835f4bb";
@@ -54,7 +56,7 @@ const AddDoctor = () => {
           setProcessing(true);
           (async () => {
             const { data } = await axios.post(
-              "http://localhost:5000/doctor",
+              "https://fathomless-temple-21605.herokuapp.com/doctor",
               doctor,
               {
                 headers: {
