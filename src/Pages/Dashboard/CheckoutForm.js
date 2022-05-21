@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import useToastify from "../../Toast/Toast";
 
 const CheckoutForm = ({ appointment }) => {
   const stripe = useStripe();
   const elements = useElements();
-  const [cardError, setCardError] = useState("");
+
   const [success, setSuccess] = useState("");
   const [processing, setProcessing] = useState(false);
   const [transactionId, setTransactionId] = useState("");
   const [clientSecret, setClientSecret] = useState("");
+  const [Toast] = useToastify();
 
-  const { price } = appointment;
+  const { price, patient, patientName } = appointment;
 
   useEffect(() => {
     fetch("http://localhost:5000/create-payment-intent", {
@@ -24,7 +26,6 @@ const CheckoutForm = ({ appointment }) => {
       .then((res) => res.json())
       .then((data) => {
         if (data?.clientSecret) {
-          console.log(data);
           setClientSecret(data.clientSecret);
         }
       });
@@ -48,9 +49,36 @@ const CheckoutForm = ({ appointment }) => {
       card,
     });
 
-    setCardError(error?.message || "");
-    setSuccess("");
-    setProcessing(true);
+    if (error?.message) {
+      Toast.fire({
+        icon: "error",
+        title: error.message,
+      });
+    }
+
+    // // confirm card payment
+    const { paymentIntent, error: intentError } =
+      await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: card,
+          billing_details: {
+            name: patientName,
+            email: patient,
+          },
+        },
+      });
+    if (intentError) {
+      Toast.fire({
+        icon: "error",
+        title: intentError.message,
+      });
+    } else {
+      console.log(paymentIntent);
+      Toast.fire({
+        icon: "success",
+        title: "congrats! Your payment is completed",
+      });
+    }
   };
   return (
     <>
@@ -79,7 +107,7 @@ const CheckoutForm = ({ appointment }) => {
           Pay
         </button>
       </form>
-      {cardError && <p className="text-red-500">{cardError}</p>}
+
       {success && (
         <div className="text-green-500">
           <p>{success} </p>
